@@ -1,17 +1,32 @@
 pipeline {
     agent any
+    environment {
+        DOCKER_CREDS = credentials('dockerhub-credentials')
+    }
 
     stages {
-        stage('Init') {
+        stage('Checkout') {
             steps {
-                echo 'Initializing..'
+                git branch: 'main', url: 'https://github.com/csye7125-su24-team18/static-site.git' ,
+                credentialsId: 'github_webhook'
             }
         }
-        stage('Test') {
+
+        stage('Build Docker Image') {
             steps {
-                echo 'Testing..'
-                echo 'Running pytest..'
+                script {
+                    def dockerImage = docker.build("html-page:1", ".")
+                    docker.withRegistry('', DOCKER_CREDS) {
+                        dockerImage.push()
+                    }
+                }
             }
+        }
+    }
+
+    post {
+        always {
+            sh 'docker system prune -af --filter="until=24h"'
         }
     }
 }
