@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKER_CREDS = credentials('dockerhub-credentials')
+        DOCKER_REGISTRY = 'https://hub.docker.com/repository/docker/hsa404/assignments/general'
     }
 
     stages {
