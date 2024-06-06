@@ -16,10 +16,10 @@ pipeline {
         stage('Build and Push Docker Image') {
             steps {
                 sh '''
-                   docker build -t html-page:v1 .
+                    docker build -t html-page:latest .
                     echo "${DOCKER_CREDS_PSW}" | docker login -u "${DOCKER_CREDS_USR}" --password-stdin
-                      // docker tag html-page:latest ${DOCKER_REGISTRY}:latest
-                      docker push ${DOCKER_REGISTRY}:v1
+                      docker tag html-page:latest ${DOCKER_REGISTRY}:latest
+                      docker push ${DOCKER_REGISTRY}:latest
                 '''
             }
         }
