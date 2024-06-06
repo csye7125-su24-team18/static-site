@@ -13,21 +13,41 @@ pipeline {
             }
         }
 
+        stage('Setup Docker Buildx') {
+            steps {
+                script {
+                    sh '''
+                        docker buildx create --name mybuilder --use
+                        docker buildx inspect --bootstrap
+                    '''
+                }
+            }
+        }
+
         stage('Build and Push Docker Image') {
             steps {
-                sh '''
-                   docker build -t html-page:v1 .
-                    echo "${DOCKER_CREDS_PSW}" | docker login -u "${DOCKER_CREDS_USR}" --password-stdin
-                      // docker tag html-page:latest ${DOCKER_REGISTRY}:latest
-                      docker push ${DOCKER_REGISTRY}:v1
-                '''
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh '''
+                            echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+                        '''
+                        
+                        sh '''
+                            
+                            docker buildx build --platform linux/amd64,linux/arm64 -t ${DOCKER_REGISTRY}:latest --push .
+                            docker buildx rm mybuilder
+                        '''
+                    }
+                }
             }
         }
     }
 
     post {
         always {
-            sh 'docker system prune -af --filter="until=24h"'
+            script {
+                sh 'docker system prune -af --filter="until=24h"'
+            }
         }
     }
 }
