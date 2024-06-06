@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_CREDS = credentials('dockerhub-credentials')
-        DOCKER_REGISTRY = 'https://hub.docker.com/repository/docker/hsa404/assignments/general'
+        DOCKER_REGISTRY = 'hsa404/assignments'
     }
 
     stages {
@@ -18,7 +18,7 @@ pipeline {
                 sh '''
                     docker build -t html-page:1 .
                     echo "${DOCKER_CREDS_PSW}" | docker login -u "${DOCKER_CREDS_USR}" --password-stdin
-                      docker push ${DOCKER_REGISTRY}/html-page:1
+                      docker push ${DOCKER_REGISTRY}/html-page:latest
                 '''
             }
         }
