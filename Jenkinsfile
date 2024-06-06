@@ -16,6 +16,15 @@ pipeline {
         stage('Setup Docker Buildx') {
             steps {
                 script {
+                    // Check if a builder with the specified name already exists
+                    def builderExists = sh(script: 'docker buildx inspect --bootstrap mybuilder', returnStatus: true) == 0
+
+                    // If the builder exists, remove it
+                    if (builderExists) {
+                        sh 'docker buildx rm mybuilder'
+                    }
+
+                    // Create a new builder
                     sh '''
                         docker buildx create --name mybuilder --use
                         docker buildx inspect --bootstrap
