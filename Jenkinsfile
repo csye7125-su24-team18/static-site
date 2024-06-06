@@ -18,8 +18,8 @@ pipeline {
                 sh '''
                    docker build -t html-page:latest .
                     echo "${DOCKER_CREDS_PSW}" | docker login -u "${DOCKER_CREDS_USR}" --password-stdin
-                      docker tag html-page:latest ${DOCKER_REGISTRY}/html-page:latest
-                      docker push ${DOCKER_REGISTRY}/html-page:latest
+                      docker tag html-page:latest ${DOCKER_REGISTRY}:latest
+                      docker push ${DOCKER_REGISTRY}:latest
                 '''
             }
         }
