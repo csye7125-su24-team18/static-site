@@ -1,3 +1,4 @@
 FROM caddy
-COPY ./index.html /usr/share/caddy
-EXPOSE 8080
+COPY ./index.html /usr/share/caddy/
+COPY Caddyfile /etc/caddy/Caddyfile
+# EXPOSE 8080
