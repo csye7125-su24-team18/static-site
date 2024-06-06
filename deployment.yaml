@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demopodv3
+spec:
+  containers:
+  - name: testport8080
+    image: poojachipmunk/kubetest:v3
+    ports:
+    - containerPort: 8080
+    readinessProbe:
+      httpGet:
+        path: /
+        port: 8080
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    livenessProbe:
+      httpGet:
+        path: /
+        port: 8080
+      initialDelaySeconds: 15
+      periodSeconds: 20
+  imagePullSecrets:
+  - name: dockerhub-secret
+
