@@ -33,7 +33,7 @@ pipeline {
                         '''
                         
                         sh '''
-                            docker buildx create --name mybuilder --use
+                            
                             docker buildx build --platform linux/amd64,linux/arm64 -t ${DOCKER_REGISTRY}:latest --push .
                             docker buildx rm mybuilder
                         '''
