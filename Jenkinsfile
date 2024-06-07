@@ -47,18 +47,16 @@ pipeline {
         stage('Build and Push Docker Image') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh '''
-                            echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-                        '''
-                        
-                        sh '''
-                            
-                            docker buildx build --platform linux/amd64,linux/arm64 -t ${DOCKER_REGISTRY}:latest --push .
-                            docker buildx rm mybuilder
-                        '''
-                    }
-                }
+    withDockerRegistry([credentialsId: 'dockerhub-credentials', url: 'https://index.docker.io/v1/']) {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+            sh """
+                docker buildx create --name mybuilder --use
+                docker buildx build --platform linux/amd64,linux/arm64 -t ${DOCKER_USERNAME}/${DOCKER_REGISTRY}:latest --push .
+                docker buildx rm mybuilder
+            """
+        }
+    }
+}
             }
         }
     }
