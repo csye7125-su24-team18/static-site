@@ -46,6 +46,8 @@ To access the static site, use port-forwarding. Run the following command:
 kubectl port-forward pod/<pod-name> 9000:8080
 ```
 
+test commit
+
 Replace `<pod-name>` with the actual name of your pod.
 
 commit for webhook6
