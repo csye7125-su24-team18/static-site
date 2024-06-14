@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'git@github.com:csye7125-su24-team18/static-site.git', credentialsId: 'github_credentials'
+                git branch: 'main', url: 'https://github.com/csye7125-su24-team18/static-site.git', credentialsId: 'github_pat'
             }
         }
 
